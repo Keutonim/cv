@@ -1,0 +1,42 @@
+/* Keutonim Light — white paper, black type, Telegram-blue frames (#2AABEE).
+   Blue is the signature: card/header/footer frames and interactive accents.
+   Body text stays black; a darker blue (--accent-ink / --focus-color) carries
+   text-on-white and focus duties where #2AABEE would fail contrast. */
+html[data-theme="light"] {
+  --bg: #ffffff;
+  --bg-glow-1: rgba(42 171 238 / 0.07);
+  --bg-glow-2: rgba(42 171 238 / 0.045);
+  --text: rgba(17, 17, 17, 0.96);
+  --text-strong: #000000;
+  --muted: rgba(17, 17, 17, 0.64);
+  --border: #2AABEE;
+  --border-2: #229ED9;
+  --accent: #2AABEE;
+  --accent-2: #229ED9;
+  --accent-rgb: 42 171 238;
+  --accent-2-rgb: 34 158 217;
+  /* Solid black wordmark — no gradient text */
+  --brand-grad: #111111;
+  --card-bg: linear-gradient(180deg, #ffffff, #f7fbfd);
+  --shadow: 0 8px 24px rgba(17, 17, 17, 0.08);
+  --shadow-soft: 0 4px 12px rgba(17, 17, 17, 0.05);
+  --r-lg: 12px;
+  --r-pill: 999px;
+  --header-bg: rgba(255, 255, 255, 0.88);
+  --container: 980px;
+  --ease: cubic-bezier(.2, .8, .2, 1);
+  --t: 180ms var(--ease);
+  --ring: 0 0 0 3px rgba(42 171 238 / 0.25);
+
+  /* ── Proposed tokens (design-spec.md §D) ──
+     Defined here ahead of the global.css wiring; inert until global.css
+     consumes them. --focus-color and --accent-ink are the accessible
+     darker blue (4.8:1 on white) for outlines and accent-as-text. */
+  --focus-color: #1579ad;
+  --accent-ink: #1579ad;
+  --tag-bg: rgba(42 171 238 / 0.10);
+  --surface-fill: rgba(42 171 238 / 0.06);
+  --hover-wash: rgba(42 171 238 / 0.08);
+  --menu-bg: #ffffff;
+  --bg-glow-3: rgba(42 171 238 / 0.05);
+}

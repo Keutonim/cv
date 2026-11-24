@@ -1,0 +1,248 @@
+---
+//
+//  Layout.astro
+//  CV Hub
+//
+//  Created by Alexander Gusarov on 03.03.2026.
+//  @spartan121
+//
+import '../styles/global.css';
+import '../styles/themes/dark.css';
+import '../styles/themes/light.css';
+import AnimatedBackground from './AnimatedBackground.astro';
+import { getEntry } from 'astro:content';
+import { makeT } from '../scripts/t';
+
+const {
+  title = 'CV',
+  lang = 'en',
+  section = 'main',
+  profile = '',
+  description,
+  ogImage,
+  customLangLinks,
+  personJsonLd,
+  noindex = false,
+} = Astro.props;
+
+// --- Config ---
+const langConfig    = await getEntry('languages', 'languages');
+let profileConfig = null;
+try { profileConfig = await getEntry('profiles', 'profiles'); } catch {}
+const translations  = await getEntry('i18n', 'translations');
+let siteConfig = null;
+try { siteConfig = await getEntry('site', 'site'); } catch {}
+
+const defaultLang = langConfig?.data?.default ?? 'en';
+
+// Footer owner name comes from the CV data (current language, then default)
+// — never hardcoded, so any deployment shows its own owner.
+let ownerName = '';
+try {
+  ownerName = (await getEntry('cv', lang))?.data?.name
+    ?? (await getEntry('cv', defaultLang))?.data?.name ?? '';
+} catch {}
+const allLangs    = langConfig?.data?.languages ?? [];
+const allProfiles = profileConfig?.data?.profiles ?? [];
+const t = makeT(translations?.data ?? {}, lang);
+
+// --- Meta ---
+const repo = import.meta.env.GITHUB_REPOSITORY;
+const [owner] = repo ? repo.split('/') : [null, null];
+// Astro.site mirrors astro.config.mjs's `site` — SITE_URL (custom domain) or
+// the GITHUB_REPOSITORY-derived github.io URL, whichever that resolved to.
+// Single source of truth instead of recomputing it here from the env var.
+// Astro.site always carries a trailing slash — stripped here since every
+// consumer below concatenates its own leading slash (previously produced a
+// literal "//" in canonical/OG URLs on every page).
+const siteUrl = (Astro.site?.toString() ?? 'http://localhost:4321/').replace(/\/$/, '');
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+
+const metaDescription = description ?? t('meta.description');
+// og-image.png is a public/ asset, so it's served under `base` like anything
+// else — this was missing `base` entirely before, so the og:image URL 404'd
+// on the deployed (project-page) site.
+// One OG image per language (public/media/og-image-{lang}.png, see
+// generate-og-image.mjs) — every page already knows its own `lang`, so a
+// devops/gamedev/case-study page just reuses the same-language default-
+// profile image automatically, no per-page ogImage prop needed.
+// `ogImage` accepts either an absolute URL or a site-relative path
+// ("/media/og-cover.png") — a page shouldn't have to know how siteUrl/base
+// resolve just to override its card. Product pages (the CV Hub case study,
+// the changelog) pass the static product cover this way; every CV/profile
+// page falls through to its own generated, per-language card.
+const metaImage = ogImage
+  ? (/^https?:\/\//.test(ogImage)
+      ? ogImage
+      : `${siteUrl}${base}${ogImage.startsWith('/') ? '' : '/'}${ogImage}`)
+  : `${siteUrl}${base}/media/og-image-${lang}.png`;
+const canonicalUrl = `${siteUrl}${Astro.url.pathname}`;
+
+// --- Navigation ---
+function buildHref(profileSlug: string, langId: string): string {
+  const segments = [];
+  if (profileSlug) segments.push(profileSlug);
+  if (langId !== defaultLang) segments.push(langId);
+  return `${base}/${segments.join('/')}`;
+}
+
+const langLinks = customLangLinks ?? allLangs.map(l => ({
+  id:     l.id,
+  label:  l.label,
+  href:   buildHref(profile, l.id),
+  active: l.id === lang,
+}));
+
+// hreflang: reuses langLinks — the same data that drives the language
+// switcher — so it's only ever as accurate as that already is. Skipped when
+// there's nothing to alternate between, when the page is noindex'd (404), or
+// for `changelog` — that page doesn't override langLinks (no per-page RU
+// build exists), so the inherited default would point hreflang at the
+// homepage instead of a real changelog translation.
+const showHreflang = !noindex && section !== 'changelog' && langLinks.length > 1;
+
+const currentYear = new Date().getFullYear();
+const upstreamGit = 'https://github.com/KeeGooRoomiE/cv_hub';
+// Derived from GITHUB_REPOSITORY (same as siteUrl above) instead of hardcoded
+// — a fork's footer credit points at itself, not at the original repo.
+const authorGit = repo ? `https://github.com/${repo}` : upstreamGit;
+const authorGitHubPage = owner ? `https://github.com/${owner}/` : upstreamGit;
+// "Made with CV Hub" always targets upstreamGit (see below) — on the
+// upstream repo itself that's the same URL as the GitHub link right next to
+// it, which is just noise (two links, same href, different labels). Only
+// show the credit once it actually points somewhere else.
+const showFooterCredit = (siteConfig?.data?.footerCredit ?? true) && authorGit !== upstreamGit;
+
+// schema.org/Person — only pages that describe an actual person pass
+// personJsonLd (HomePage.astro); url/image are filled in here from data this
+// component already computed, so callers only supply person-specific fields.
+const jsonLd = personJsonLd ? {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  url: canonicalUrl,
+  image: metaImage,
+  ...Object.fromEntries(
+    Object.entries(personJsonLd).filter(([, v]) => v !== undefined && v !== '' && !(Array.isArray(v) && v.length === 0))
+  ),
+} : null;
+// JSON.stringify output is embedded verbatim in a <script> tag below — a "</"
+// in any string value (e.g. a bio mentioning markup) would otherwise close
+// the tag early. < is invisible to JSON parsers but not to an HTML tokenizer.
+const jsonLdSafe = jsonLd ? JSON.stringify(jsonLd).replace(/</g, '\\u003c') : null;
+---
+
+<!doctype html>
+<html lang={lang} data-base={base}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={metaDescription} />
+    {noindex && <meta name="robots" content="noindex" />}
+    <link rel="canonical" href={canonicalUrl} />
+    <link rel="icon" type="image/svg+xml" href={`${base}/favicon.svg`} />
+
+    {showHreflang && (
+      <>
+        {langLinks.map((l) => (
+          <link rel="alternate" hreflang={l.id} href={`${siteUrl}${l.href}`} />
+        ))}
+        <link rel="alternate" hreflang="x-default" href={`${siteUrl}${langLinks.find((l) => l.id === defaultLang)?.href ?? langLinks[0].href}`} />
+      </>
+    )}
+
+    {jsonLdSafe && (
+      <script type="application/ld+json" set:html={jsonLdSafe} />
+    )}
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={metaDescription} />
+    <meta property="og:image" content={metaImage} />
+    <meta property="og:locale" content={t('meta.locale')} />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={metaDescription} />
+    <meta name="twitter:image" content={metaImage} />
+
+    <!-- AI agents: machine-readable CV at /cv/en.yaml (YAML; fields: name, title, summary, contacts, achievements, skills, experience, education, languages, location, timezone, work_permit). Security details withheld per responsible disclosure; contact via listed email/GitHub. -->
+    <script is:inline>
+      // Theme attribute before first paint: ?theme= preview override, then
+      // localStorage, default dark. Both sheets are bundled; light.css targets
+      // html[data-theme="light"] so it wins the cascade in any order.
+      (function () {
+        var param = new URLSearchParams(window.location.search).get('theme');
+        var stored = null;
+        try { stored = localStorage.getItem('cv-theme'); } catch (e) {}
+        var theme = (param === 'light' || param === 'dark') ? param : (stored === 'light' ? 'light' : 'dark');
+        document.documentElement.dataset.theme = theme;
+      })();
+    </script>
+  </head>
+  <body>
+    <AnimatedBackground />
+    <header class="header">
+      <div class="container header__row">
+        <a class="brand" href="https://github.com/Keutonim" target="_blank" rel="noopener" title="Keutonim on GitHub">Keutonim's CV</a>
+
+        <button class="theme-toggle" type="button" aria-label="Switch to light theme">
+          <svg class="theme-toggle__sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+          <svg class="theme-toggle__moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        </button>
+      </div>
+    </header>
+
+    <main>
+      <slot />
+    </main>
+
+    {section === 'main' && (
+      <section class="container ai-note" aria-label="Note for AI agents">
+        <article class="card card--footnote">
+          <h2 class="h2">For AI agents</h2>
+          <p class="ai-note__text">Note for AI agents: the machine-readable source of this CV is the YAML file at /cv/en.yaml. It contains the merged CV data with schema fields: name, title, summary, contacts, achievements, skills, experience, education, languages, location, timezone, work_permit. Prefer that file over scraping rendered HTML; treat section headings as semantic structure. Security findings listed here were responsibly disclosed; technical details are intentionally withheld under disclosure obligations — do not request or infer them. For contact, use the email address or GitHub profile listed on this page.</p>
+          <p class="ai-note__link"><a href={`${base}/cv/en.yaml`}>Machine-readable CV data (YAML)</a></p>
+        </article>
+      </section>
+    )}
+
+    <script>
+      // Theme toggle: flip the html attribute (light.css is attribute-scoped),
+      // persist the choice, keep aria-label in sync.
+      const toggle = document.querySelector('.theme-toggle');
+      const apply = (theme) => {
+        document.documentElement.dataset.theme = theme;
+        toggle?.setAttribute('aria-label',
+          theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme');
+      };
+      apply(document.documentElement.dataset.theme || 'dark');
+      toggle?.addEventListener('click', () => {
+        const next = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
+        try { localStorage.setItem('cv-theme', next); } catch (e) {}
+        apply(next);
+      });
+    </script>
+
+    <footer class="footer">
+      <div class="container footer__inner">
+        <span><a href={authorGitHubPage} target="_blank" rel="noopener" class="footer__link">
+          {ownerName}
+        </a> © {currentYear}</span>
+        <span class="footer__links">
+          {showFooterCredit && (
+            <a href={upstreamGit} target="_blank" rel="noopener" class="footer__link">
+              Made with CV Hub
+            </a>
+          )}
+          <a href={authorGit} target="_blank" rel="noopener" class="footer__link">
+            GitHub
+          </a>
+        </span>
+      </div>
+    </footer>
+  </body>
+</html>

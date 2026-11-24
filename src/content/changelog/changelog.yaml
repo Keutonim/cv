@@ -1,0 +1,6 @@
+changelog:
+  - version: "1.0.0"
+    date: "2026-11-24"
+    changes:
+      - type: added
+        text: Site initialized from the CV Hub template (MIT).

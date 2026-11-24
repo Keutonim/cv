@@ -1,0 +1,102 @@
+# Anton Pichugin — CV data. Single source of truth for the site and resume exports.
+# Schema: src/content.config.ts. Source: Anton_Pichugin_CV.docx (C:\Share), 2026-11.
+# Experience bullets trimmed to display budget (design-spec §C4); full detail in source CV.
+
+name: Anton Pichugin
+title: AI Systems Engineer | Agentic AI | AI Security
+summary: >
+  AI Systems Engineer with software product experience since 2019 and AI
+  engineering since 2025, building commercial multi-agent systems and MCP
+  integrations alongside practical application-security research. Contributed
+  to paid projects for 30+ companies between 2023 and 2026, independently and
+  in cross-functional teams. Currently owns the full engineering lifecycle of
+  a commercial 15-agent content platform; its generalised core is published
+  on GitHub as GeneRaptor.
+
+expertise:
+  - Agentic AI & multi-agent orchestration
+  - MCP servers & reusable AI Skills
+  - Backend & full-stack development
+  - LLM integration, evaluation & cost optimisation
+  - AI red teaming & application security
+  - Knowledge graphs & semantic retrieval
+
+contacts:
+  - label: GitHub
+    url: https://github.com/Keutonim
+  - label: Email
+    url: mailto:anton05070567@gmail.com
+
+achievements:
+  - Recognised in the Yandex Hall of Fame for responsibly disclosed security research.
+  - Reported undisclosed RCE and LFI vulnerabilities to z.ai, ARC.io and Yandex.
+  - Contributed to paid projects for 30+ companies between 2023 and 2026.
+  - Cut comparable development tasks from ~120 hours to 10 hours with AI-assisted workflows.
+
+skills:
+  - group: AI Engineering
+    items: [MCP, Multi-agent orchestration, AI Skills, Tool calling, LLM evaluation, Model routing, Ollama]
+  - group: Security
+    items: [AI red teaming, Prompt injection, Vulnerability research, Web app security, Ghidra, Binary analysis]
+  - group: Backend & APIs
+    items: [Python, Kotlin, FastAPI, asyncio, Node.js, REST, SQL]
+  - group: Data & Retrieval
+    items: [Neo4j, SurrealDB, Knowledge graphs, Graph RAG, Embeddings, Semantic search]
+  - group: Infrastructure
+    items: [Docker, GitHub Actions, Git, Linux]
+  - group: Frontend & Desktop
+    items: [React, Electron, JavaScript, WordPress]
+
+experience:
+  - company: Independent Product Development
+    role: AI Systems Engineer & Full-Stack Developer
+    period: 2025 — Present
+    digest: "Commercial 15-agent content platform, end-to-end: orchestration, custom MCP integrations, model routing; core published as GeneRaptor."
+    description:
+      - Design, build and maintain a commercial content production platform composed of 15 specialised agents; own the architecture and end-to-end implementation.
+      - Publish the generalised core of the platform as GeneRaptor on GitHub; the commercial platform runs from a separate fork.
+      - Develop agent orchestration, custom MCP integrations, reusable Skills, knowledge retrieval and multi-stage quality checks.
+      - Integrate hosted and locally run LLMs, selecting models and routing workflows to reduce operating costs without sacrificing output quality.
+    stack: [Multi-agent orchestration, MCP, AI Skills, LLM routing, Knowledge retrieval]
+  - company: Client Projects
+    role: Full-Stack Web Developer
+    period: "2025"
+    digest: "Websites for construction, healthcare, retail and other clients; AI-assisted workflows cut comparable tasks from ~120h to 10h."
+    description:
+      - Developed and maintained websites for clients in construction, cleaning, healthcare, automotive services, cosmetology, retail and furniture.
+      - Reduced the time required for a range of comparable development tasks from approximately 120 hours to 10 hours by introducing AI-assisted development workflows.
+    stack: []
+  - company: Self-Directed Work
+    role: Independent Security Research & Technical Development
+    period: 2023 — 2024
+    digest: "Self-directed web/application security research: traffic proxying, browser isolation, controlled resilience and load testing on own services."
+    description:
+      - Built practical knowledge of web and application security through hands-on research, traffic proxying, browser-isolation techniques and controlled resilience/load testing on services under own control.
+      - Explored network behaviour and application attack surfaces as a foundation for subsequent vulnerability research and security tooling.
+    stack: []
+  - company: Website Development and Maintenance
+    role: Junior Web Developer
+    period: 2020 — 2023
+    digest: "Built and maintained local history museum and construction retailer websites while studying web security."
+    description:
+      - Maintained and developed websites for a local history museum and a construction retailer.
+      - Studied web application security alongside development work, with a focus on understanding and improving website protection.
+    stack: []
+  - company: Computer Vision and City Video-Surveillance Project
+    role: Software Developer
+    period: 2019 — 2020
+    digest: "City video-surveillance: vehicle tracking at city entry points, OCR licence-plate recognition, truck movement recording."
+    description:
+      - Worked on a city-camera monitoring project involving video surveillance and vehicle tracking at city entry points.
+      - Contributed to OCR-based licence-plate recognition and the recording of truck and vehicle movements.
+    stack: [OCR, Computer Vision]
+
+education: []
+
+languages:
+  - language: English
+    level: B2
+
+location: Minsk, Belarus
+timezone: UTC+3
+work_permit: Open to relocation and remote work

@@ -1,0 +1,40 @@
+/* Keutonim Dark — near-black canvas, monochrome white elements and type.
+   No hue anywhere: accent, borders, glows and orbs all resolve to white.
+   Depth comes from surface steps and hairlines, not from colored shadow. */
+:root {
+  --bg: #080808;
+  --bg-glow-1: rgba(255 255 255 / 0.045);
+  --bg-glow-2: rgba(255 255 255 / 0.025);
+  --text: rgba(255, 255, 255, 0.95);
+  --text-strong: #ffffff;
+  --muted: rgba(255, 255, 255, 0.60);
+  --border: rgba(255, 255, 255, 0.12);
+  --border-2: rgba(255, 255, 255, 0.22);
+  --accent: #ffffff;
+  --accent-2: #ffffff;
+  --accent-rgb: 255 255 255;
+  --accent-2-rgb: 255 255 255;
+  /* Solid wordmark — background-clip:text renders a flat white brand, no gradient */
+  --brand-grad: #ffffff;
+  --card-bg: linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.025));
+  --shadow: 0 16px 44px rgba(0, 0, 0, 0.55);
+  --shadow-soft: 0 10px 26px rgba(0, 0, 0, 0.40);
+  --r-lg: 12px;
+  --r-pill: 999px;
+  --header-bg: rgba(8, 8, 8, 0.72);
+  --container: 980px;
+  --ease: cubic-bezier(.2, .8, .2, 1);
+  --t: 180ms var(--ease);
+  --ring: 0 0 0 3px rgba(255 255 255 / 0.18);
+
+  /* ── Proposed tokens (design-spec.md §D) ──
+     Defined here ahead of the global.css wiring; inert until global.css
+     consumes them, then they fix focus contrast and surface fills. */
+  --focus-color: rgba(255, 255, 255, 0.70);
+  --accent-ink: #ffffff;
+  --tag-bg: rgba(255, 255, 255, 0.06);
+  --surface-fill: rgba(255, 255, 255, 0.03);
+  --hover-wash: rgba(255, 255, 255, 0.06);
+  --menu-bg: #141414;
+  --bg-glow-3: rgba(255, 255, 255, 0.04);
+}

@@ -1,0 +1,5 @@
+profiles:
+  - id: default
+    label: "Generalist"
+    slug: ""
+    spec: null

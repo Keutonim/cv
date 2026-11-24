@@ -1,0 +1,69 @@
+# Selected projects shown on the main page. Source: Anton_Pichugin_CV.docx.
+# Descriptions: writer digests (<= 20 words). Repo links verified via GitHub API (2026-11-24).
+projects:
+  - slug: generaptor
+    name: GeneRaptor
+    order: 1
+    category: Agentic AI
+    role: Author & maintainer
+    description: >
+      Generalised core of the commercial 15-agent content platform; local-first
+      multi-agent article generation with research, writing and verification roles.
+    tags: [Multi-agent, MCP, LLM routing]
+    stack: [Python, MCP, AI Skills]
+    links:
+      - label: GitHub
+        url: https://github.com/Keutonim/GeneRaptor
+        type: repo
+    featured: true
+
+  - slug: ai-red-teaming-framework
+    name: Autonomous AI Red Teaming Framework
+    order: 2
+    category: AI Security
+    role: Author
+    description: >
+      Authorised bug-bounty research framework automating discovery through
+      reporting, with custom MCP servers, specialist agents and Ghidra workflows.
+    tags: [AI red teaming, MCP, Ghidra]
+    stack: [Custom MCP servers, AI Skills, Specialist agents]
+    links: []
+
+  - slug: vulndog
+    name: VulnDog
+    order: 3
+    category: Security tooling
+    role: Author & maintainer
+    description: >
+      Open-source passive traffic analyser; flags vulnerability-class signals via
+      embeddings, forwards alerts to higher-level agents; not a validator.
+    tags: [Passive analysis, Embeddings, CVE/CWE]
+    stack: [Python, Embeddings, Knowledge base]
+    links:
+      - label: GitHub
+        url: https://github.com/Keutonim/VulnDog
+        type: repo
+
+  - slug: vuln-knowledge-graph
+    name: Graph-Based Vulnerability Knowledge System
+    order: 4
+    category: Knowledge engineering
+    role: Author
+    description: >
+      Neo4j vulnerability knowledge graph with custom MCP server and librarian
+      agent; graph queries plus semantic search.
+    tags: [Knowledge graph, MCP, Semantic search]
+    stack: [Neo4j, MCP, Embeddings]
+    links: []
+
+  - slug: software-protection
+    name: Private Software Protection Project
+    order: 5
+    category: Application security
+    role: Author
+    description: >
+      Private project: hardware-bound licensing, subscription issuance,
+      prompt-attack controls, cloud AI assistant; details not public.
+    tags: [Licensing, Prompt-attack controls, Anomaly detection]
+    stack: [Full-stack, Hardware-bound licensing, Expiring tokens]
+    links: []

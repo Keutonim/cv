@@ -1,0 +1,6 @@
+# Site-wide settings. Schema: src/content.config.ts. Reference: docs/INFO_en.md §17.
+# Flat download set for a personal CV.
+downloads: [pdf, docx]
+
+# "Made with CV Hub" footer credit — set to false to remove.
+footerCredit: true
